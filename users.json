@@ -1,0 +1,20 @@
+[
+  {
+    "userID": "001",
+    "userName": "Zin Ko",
+    "email": "zinko.it@gmail.com",
+    "password": "password"
+  },
+  {
+    "userID": "002",
+    "userName": "Javana",
+    "email": "javana@gmail.com",
+    "password": "password"
+  },
+  {
+    "userID": "003",
+    "userName": "Pannananda",
+    "email": "pannananda@gmail.com",
+    "password": "password"
+  }
+]
