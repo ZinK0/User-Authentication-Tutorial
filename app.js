@@ -57,6 +57,8 @@ function removeDuplicatesByEmail(arr1, arr2, email) {
 async function getUser() {
   // ပထမ json server accounts ယူတယ်။
   let users = await getData("users.json"); //[0,1,2,4,5, hlahal]
+  saveLocal(users, "users"); //သိမ်းထားမယ် json server data
+
   console.log(users);
 
   // ဒုတိယ local accounts ယူတယ်။
@@ -139,10 +141,56 @@ async function getUser() {
 
     if (loginUser) {
       console.log("အကောင့်ဝင်တာ အောင်မြင်ပါတယ်။");
-      loginState.isLogin = true;
-      loginState.loginUser = loginEmail;
+      // loginState.isLogin = true;
+      // loginState.loginUser = loginEmail;
+      loginState = {
+        isLogin: true,
+        loginUser: loginEmail,
+      };
       saveLocal(loginState, "loginState");
-      console.log(loginState);
+
+      // Login Success ဖြစ်ရင် Signup & login form ကိုဖျောက်မယ် -=> Logout + Delete Btn ထည့်မယ်။
+      signUpForm.addClass("d-none");
+      loginForm.addClass("d-none");
+
+      let logoutBtn = $("<button>")
+        .addClass("btn btn-secondary mx-5")
+        .text("Logout")
+        .on("click", () => {
+          loginState = {
+            isLogin: false,
+            loginUser: null,
+          };
+          location.reload(true);
+          // update local login State
+          saveLocal(loginState, "loginState");
+        });
+
+      let deleteBtn = $("<button>")
+        .addClass("btn btn-danger mx-5")
+        .text("Delete")
+        .on("click", () => {
+          let loginUserEmail = getLocal("loginState").loginUser;
+          // console.log(loginUser);
+          // local ကရလာတဲ့ email ကို ရှာမယ် ပြီးရင် ဖျက်မယ်။
+          let loginUser = users.find((user) => {
+            return user.email === loginUserEmail;
+          });
+
+          let updateUsers = users.filter((user) => user !== loginUser);
+          saveLocal(updateUsers, "users");
+
+          loginState = {
+            isLogin: false,
+            loginUser: null,
+          };
+          saveLocal(loginState, "loginState");
+
+          location.reload(true);
+        });
+
+      let body = $("body");
+      body.append(logoutBtn, deleteBtn);
     } else {
       console.log("အကောင့် ဝင်တာ မအောင်မြင်ပါ။ ");
     }
@@ -158,3 +206,7 @@ loginState = JSON.parse(localStorage.getItem("loginState"));
 getUser();
 
 // Form အသစ်ယူပြီး သိမ်းမယ်။
+
+// let button = document.createElement("div");
+// button.classList.add("btn btn-danger");
+// button.textContent = "Logout";
